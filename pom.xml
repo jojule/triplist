@@ -16,23 +16,24 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <!-- Dependencies -->
+
         <vaadin.version>10.0.0.alpha9</vaadin.version>
         <servlet.api.version>3.1.0</servlet.api.version>
         <selenium.server.version>3.4.0</selenium.server.version>
+
         <spring-boot.version>2.0.0.M7</spring-boot.version>
-
-        <!-- Plugins -->
-        <maven.clean.plugin.version>3.0.0</maven.clean.plugin.version>
-        <maven.war.plugin.version>3.1.0</maven.war.plugin.version>
-        
     </properties>
-
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-milestone</id>
+            <url>https://repo.spring.io/milestone/</url>
+        </pluginRepository>
+    </pluginRepositories>
     <repositories>
         <repository>
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
         </repository>
-        
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
@@ -79,27 +80,10 @@
             <groupId>com.vaadin</groupId>
             <artifactId>flow-spring-boot-starter</artifactId>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-commons</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
--->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -116,7 +100,22 @@
             <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        <!-- Fix version conflicts between various dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -124,28 +123,8 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
             </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>${maven.war.plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Implementation-Title>${project.name}
-                            </Implementation-Title>
-                            <Implementation-Version>${project.version}
-                            </Implementation-Version>
-                        </manifestEntries>
-                    </archive>
-                    <warSourceExcludes>
-                        **/node_modules/,**/node/,**/build/,**/etc/
-                    </warSourceExcludes>
-                </configuration>
-            </plugin>
-
-           
         </plugins>
     </build>
 
@@ -157,10 +136,6 @@
                     <name>vaadin.productionMode</name>
                 </property>
             </activation>
-
-            <properties>
-                <npm.build.goal>run prodMode</npm.build.goal>
-            </properties>
 
             <dependencies>
                 <dependency>
